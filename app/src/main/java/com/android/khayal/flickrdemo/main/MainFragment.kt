@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.android.khayal.flickrdemo.R
+import com.android.khayal.flickrdemo.data.DataRepository
 import com.android.khayal.flickrdemo.databinding.MainFragmentBinding
 import com.android.khayal.flickrdemo.listeners.RecyclerItemClickListener
 
@@ -20,19 +21,15 @@ class MainFragment : Fragment(), RecyclerItemClickListener.OnRecyclerClickListen
     }
 
     private val viewModel by lazy {
-        ViewModelProviders.of(this).get(MainFragmentViewModel::class.java)
+        ViewModelProviders.of(this, MainFragmentViewModelFactory(DataRepository()))
+            .get(MainFragmentViewModel::class.java)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return DataBindingUtil.inflate<MainFragmentBinding>(
-            LayoutInflater.from(context),
-            R.layout.main_fragment,
-            container,
-            false
-        )
+        return DataBindingUtil.inflate<MainFragmentBinding>(LayoutInflater.from(context), R.layout.main_fragment, container, false)
             .apply {
                 viewModel = this@MainFragment.viewModel
                 mainFragment = this@MainFragment
@@ -42,7 +39,7 @@ class MainFragment : Fragment(), RecyclerItemClickListener.OnRecyclerClickListen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.GetSearchData("Android", "Any")
+        viewModel.getSearchData("Android", "Any")
     }
 
 
