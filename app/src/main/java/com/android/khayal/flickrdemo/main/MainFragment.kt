@@ -68,10 +68,8 @@ class MainFragment : Fragment(), RecyclerItemClickListener.OnRecyclerClickListen
             .registerOnSharedPreferenceChangeListener(this)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        //here unregister is called here because changes in SharedPrefs are made in
-        //another activity
+    override fun onStop() {
+        super.onStop()
         PreferenceManager.getDefaultSharedPreferences(activity?.applicationContext)
             .unregisterOnSharedPreferenceChangeListener(this)
     }
