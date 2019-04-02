@@ -68,8 +68,10 @@ class MainFragment : Fragment(), RecyclerItemClickListener.OnRecyclerClickListen
             .registerOnSharedPreferenceChangeListener(this)
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
+        //unregister OnSharedPreferenceChangeListener here in order to detect
+        //the changes in the SearchActivity
         PreferenceManager.getDefaultSharedPreferences(activity?.applicationContext)
             .unregisterOnSharedPreferenceChangeListener(this)
     }
@@ -84,12 +86,10 @@ class MainFragment : Fragment(), RecyclerItemClickListener.OnRecyclerClickListen
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        if (isVisible) {
-            if (key == getString(R.string.query_key)) {
-                val searchKey = sharedPreferences.getString(getString(R.string.query_key), "") ?: ""
-                if (searchKey.isNotEmpty()) {
-                    viewModel.getSearchData(tags = searchKey, tagMode = "Any")
-                }
+        if (key == getString(R.string.query_key)) {
+            val searchKey = sharedPreferences.getString(getString(R.string.query_key), "") ?: ""
+            if (searchKey.isNotEmpty() && isVisible && !isRemoving) {
+                viewModel.getSearchData(tags = searchKey, tagMode = "Any")
             }
         }
     }
