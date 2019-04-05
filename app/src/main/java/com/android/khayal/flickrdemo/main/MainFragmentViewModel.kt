@@ -1,23 +1,24 @@
 package com.android.khayal.flickrdemo.main
 
-import android.app.Application
-import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.ViewModel
 import com.android.khayal.flickrdemo.data.DataRepository
 import com.android.khayal.flickrdemo.models.SearchResponse
-import io.reactivex.functions.Consumer
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 
-class MainFragmentViewModel(application: Application) : AndroidViewModel(application) {
-    lateinit var repository: DataRepository
-    val stringBuilder: StringBuilder = StringBuilder()
-    val feed = MutableLiveData<Array<SearchResponse.Item>>()
+class MainFragmentViewModel(
+    private val repository: DataRepository = DataRepository(),
+    private val disposables: CompositeDisposable = CompositeDisposable()
+) : ViewModel() {
 
-    fun GetSearchData(tags: String, tagMode: String){
-        repository = DataRepository()
-        repository.initCallbacks(Consumer { onResponseSuccess(it) },
-            Consumer { onResponseFail(it) })
+    val feed: MutableLiveData<Array<SearchResponse.Item>> = MutableLiveData()
 
-        repository.fetchData(tags, tagMode)
+    fun getSearchData(tags: String, tagMode: String) {
+        val d = repository.fetchData(tags, tagMode)
+            .subscribeOn(Schedulers.io())
+            .subscribe(::onResponseSuccess, ::onResponseFail)
+        disposables.add(d)
     }
 
     fun onResponseSuccess(response: SearchResponse.Content) {
@@ -28,8 +29,8 @@ class MainFragmentViewModel(application: Application) : AndroidViewModel(applica
         feed.postValue(null)
     }
 
-    override fun onCleared() {
-        repository.disposable?.dispose()
+    override public fun onCleared() {
+        disposables.dispose()
     }
 
 }

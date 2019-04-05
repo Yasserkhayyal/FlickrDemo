@@ -1,5 +1,6 @@
 package com.android.khayal.flickrdemo.adapters
 
+import android.arch.lifecycle.LiveData
 import android.databinding.BindingAdapter
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -8,6 +9,7 @@ import android.widget.ImageView
 import com.android.khayal.flickrdemo.listeners.RecyclerItemClickListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import io.reactivex.observers.TestObserver
 
 object BindingAdapter {
 
@@ -20,7 +22,8 @@ object BindingAdapter {
     ){
         val recyclerView = view as RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
-        if (recyclerView.adapter == null) {
+        if (recyclerView.adapter == null) { // workaround to prevent adding onItemTouchListener every time the underlying
+            //dataSet changes
             recyclerViewItemClickListener?.run {
                 recyclerView.addOnItemTouchListener(
                     RecyclerItemClickListener(
