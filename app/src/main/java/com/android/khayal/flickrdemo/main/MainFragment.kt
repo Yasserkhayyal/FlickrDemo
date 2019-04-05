@@ -1,26 +1,33 @@
 package com.android.khayal.flickrdemo.main
 
+import android.app.SearchManager
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
+import android.widget.SearchView
 import android.widget.Toast
 import com.android.khayal.flickrdemo.R
 import com.android.khayal.flickrdemo.data.DataRepository
 import com.android.khayal.flickrdemo.databinding.MainFragmentBinding
+import com.android.khayal.flickrdemo.listeners.NewIntentListener
 import com.android.khayal.flickrdemo.listeners.RecyclerItemClickListener
 
 
-class MainFragment : Fragment(), RecyclerItemClickListener.OnRecyclerClickListener {
+class MainFragment : Fragment(), RecyclerItemClickListener.OnRecyclerClickListener{
 
     companion object {
         fun newInstance() = MainFragment()
     }
 
-    private val viewModel by lazy {
+    val viewModel by lazy {
         ViewModelProviders.of(this, MainFragmentViewModelFactory(DataRepository()))
             .get(MainFragmentViewModel::class.java)
     }
@@ -29,7 +36,13 @@ class MainFragment : Fragment(), RecyclerItemClickListener.OnRecyclerClickListen
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return DataBindingUtil.inflate<MainFragmentBinding>(LayoutInflater.from(context), R.layout.main_fragment, container, false)
+        setHasOptionsMenu(true)
+        return DataBindingUtil.inflate<MainFragmentBinding>(
+            LayoutInflater.from(context),
+            R.layout.main_fragment,
+            container,
+            false
+        )
             .apply {
                 viewModel = this@MainFragment.viewModel
                 mainFragment = this@MainFragment
@@ -37,9 +50,13 @@ class MainFragment : Fragment(), RecyclerItemClickListener.OnRecyclerClickListen
             }.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel.getSearchData("Android", "Any")
+    override fun onStart() {
+        super.onStart()
+        val searchKey = PreferenceManager.getDefaultSharedPreferences(activity?.applicationContext)
+            .getString(getString(R.string.query_key),"")?:""
+        if(searchKey.isNotEmpty()) {
+            viewModel.getSearchData(tags = searchKey, tagMode = "Any")
+        }
     }
 
 
