@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable name="obj" type="com.android.khayal.flickrdemo.models.SearchResponse.Item"/>
+    </data>
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 xmlns:tools="http://schemas.android.com/tools"
+                                                 android:id="@+id/list_item"
+                                                 android:clickable="true"
+                                                 android:focusable="true"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="wrap_content">
+
+        <ImageView
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                tools:srcCompat="@tools:sample/avatars"
+                android:contentDescription="@null"
+                android:id="@+id/itemImage"
+                app:imageSrcUrl="@{obj.media.mediaURL}"
+                android:scaleType="center"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="16dp"/>
+        <TextView
+                tools:text="title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/item_title"
+                android:text="@{obj.title}"
+                style="@style/Base.TextAppearance.AppCompat.Headline"
+                app:layout_constraintStart_toEndOf="@id/itemImage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintTop_toTopOf="@id/itemImage"
+                android:layout_marginStart="16dp" android:layout_marginEnd="8dp"/>
+        <TextView
+                tools:text="description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/description_text_view"
+                android:text="@{obj.description}"
+                style="@style/Base.TextAppearance.AppCompat.Large"
+                app:layout_constraintStart_toStartOf="@+id/item_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/item_title"                     android:layout_marginEnd="8dp"/>
+        <TextView
+                tools:text="author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/author_text_view"
+                android:text="@{obj.author}"
+                style="@style/Base.TextAppearance.AppCompat.Medium"
+                app:layout_constraintStart_toStartOf="@+id/description_text_view"
+                app:layout_constraintTop_toBottomOf="@+id/description_text_view"
+                android:layout_marginTop="8dp"
+        />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>
