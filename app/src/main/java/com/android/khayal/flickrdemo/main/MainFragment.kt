@@ -9,6 +9,7 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
+import android.support.v7.widget.RecyclerView
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
@@ -21,7 +22,8 @@ import com.android.khayal.flickrdemo.listeners.NewIntentListener
 import com.android.khayal.flickrdemo.listeners.RecyclerItemClickListener
 
 
-class MainFragment : Fragment(), RecyclerItemClickListener.OnRecyclerClickListener{
+class MainFragment : Fragment(), RecyclerItemClickListener.OnRecyclerClickListener
+    , SharedPreferences.OnSharedPreferenceChangeListener {
 
     companion object {
         fun newInstance() = MainFragment()
@@ -50,13 +52,28 @@ class MainFragment : Fragment(), RecyclerItemClickListener.OnRecyclerClickListen
             }.root
     }
 
-    override fun onStart() {
-        super.onStart()
-        val searchKey = PreferenceManager.getDefaultSharedPreferences(activity?.applicationContext)
-            .getString(getString(R.string.query_key),"")?:""
-        if(searchKey.isNotEmpty()) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val searchKey = PreferenceManager.getDefaultSharedPreferences(activity?.applicationContext).getString(
+            getString(R.string.query_key), ""
+        ) ?: ""
+        if (searchKey.isNotEmpty()) {//to execute search at least once
             viewModel.getSearchData(tags = searchKey, tagMode = "Any")
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        PreferenceManager.getDefaultSharedPreferences(activity?.applicationContext)
+            .registerOnSharedPreferenceChangeListener(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        //unregister OnSharedPreferenceChangeListener here in order to detect
+        //the changes in the SearchActivity
+        PreferenceManager.getDefaultSharedPreferences(activity?.applicationContext)
+            .unregisterOnSharedPreferenceChangeListener(this)
     }
 
 
@@ -66,5 +83,14 @@ class MainFragment : Fragment(), RecyclerItemClickListener.OnRecyclerClickListen
 
     override fun onItemLongClick(view: View, position: Int) {
         Toast.makeText(activity, "long tap at $position", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
+        if (key == getString(R.string.query_key)) {
+            val searchKey = sharedPreferences.getString(getString(R.string.query_key), "") ?: ""
+            if (searchKey.isNotEmpty() && isVisible && !isRemoving) {
+                viewModel.getSearchData(tags = searchKey, tagMode = "Any")
+            }
+        }
     }
 }

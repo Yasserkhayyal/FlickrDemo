@@ -19,7 +19,7 @@ object BindingAdapter {
     fun <T> setRecyclerViewData(
         view: View, dataArray: Array<T?>? = null,
         recyclerViewItemClickListener: RecyclerItemClickListener.OnRecyclerClickListener?
-    ){
+    ) {
         val recyclerView = view as RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
         if (recyclerView.adapter == null) { // workaround to prevent adding onItemTouchListener every time the underlying
@@ -51,6 +51,12 @@ object BindingAdapter {
             .load(url)
             .apply(RequestOptions.overrideOf(view.width, view.height))
             .into(view as ImageView)
+    }
+
+    @BindingAdapter("setVisibility")
+    @JvmStatic
+    fun showProgressBar(view: View, show: Boolean) {
+        view.visibility = if (show) View.VISIBLE else View.GONE
     }
 
 }
