@@ -1,9 +1,11 @@
 package com.android.khayal.flickrdemo.main
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
-import com.android.khayal.flickrdemo.data.DataRepository
-import com.android.khayal.flickrdemo.models.SearchResponse
+import com.android.khayal.flickrdemo.repository.DataRepository
+import com.android.khayal.flickrdemo.vo.SearchResponse
+import com.android.khayal.flickrdemo.ui.main.MainFragmentViewModel
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
@@ -19,18 +21,20 @@ class MainFragmentViewModelTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
     private val repo: DataRepository = mock<DataRepository>(DataRepository::class.java)
     private val disposables: CompositeDisposable = mock(CompositeDisposable::class.java)
-    private val viewModel: MainFragmentViewModel = MainFragmentViewModel(repository = repo,disposables = disposables)
+    private val viewModel: MainFragmentViewModel =
+        MainFragmentViewModel(repository = repo, disposables = disposables)
 
     @Before
     fun setUp() {
-        Mockito.clearInvocations(repo)
+        clearInvocations(repo)
     }
 
     @Test
     fun `with api success should emmit value`() {
         val content = SearchResponse.Content(arrayOf())
 
-        val observable = Observable.just(content)
+        val observable = Single.just(content)
+
         `when`(repo.fetchData("", "")).thenReturn(observable)
 
         viewModel.getSearchData("", "")
@@ -42,7 +46,8 @@ class MainFragmentViewModelTest {
 
     @Test
     fun `with api failure should emit error`() {
-        val observable = Observable.error<SearchResponse.Content>(Throwable())
+        val observable = Single.error<SearchResponse.Content>(Throwable())
+
         `when`(repo.fetchData("", "")).thenReturn(observable)
 
         assertArrayEquals(null, viewModel.feed.value)

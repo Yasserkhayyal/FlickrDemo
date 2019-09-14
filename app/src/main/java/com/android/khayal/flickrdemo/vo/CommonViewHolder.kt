@@ -1,4 +1,4 @@
-package com.android.khayal.flickrdemo.models
+package com.android.khayal.flickrdemo.vo
 
 import android.databinding.ViewDataBinding
 import android.support.v7.widget.RecyclerView

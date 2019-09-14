@@ -1,4 +1,4 @@
-package com.android.khayal.flickrdemo.models
+package com.android.khayal.flickrdemo.vo
 
 import com.google.gson.annotations.SerializedName
 

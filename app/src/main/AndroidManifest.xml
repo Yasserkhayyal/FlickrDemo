@@ -13,20 +13,19 @@
             android:theme="@style/AppTheme"
             android:fullBackupContent="@null">
         <activity
-                android:name=".main.MainActivity"
-                android:label="MainActivity"
+                android:name=".MainActivity"
                 android:launchMode="singleTop"
                 android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-                <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".searchable.SearchActivity"
+        <activity android:name=".ui.searchable.SearchActivity"
                   android:label="SearchActivity"
-                  android:parentActivityName=".main.MainActivity">
+                  android:parentActivityName="MainActivity">
             <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
                 <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
             <meta-data android:name="android.app.searchable"

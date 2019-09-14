@@ -1,4 +1,4 @@
-package com.android.khayal.flickrdemo.main
+package com.android.khayal.flickrdemo
 
 import android.content.Intent
 import android.databinding.DataBindingUtil
@@ -6,9 +6,9 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import com.android.khayal.flickrdemo.R
 import com.android.khayal.flickrdemo.databinding.ActivityMainBinding
-import com.android.khayal.flickrdemo.searchable.SearchActivity
+import com.android.khayal.flickrdemo.ui.main.MainFragment
+import com.android.khayal.flickrdemo.ui.searchable.SearchActivity
 import kotlinx.android.synthetic.main.toolbar_layout.*
 
 class MainActivity : AppCompatActivity() {
@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main).apply {
             setSupportActionBar(toolbar)
             supportActionBar?.setDisplayHomeAsUpEnabled(false)
-            setLifecycleOwner(this@MainActivity)
+            lifecycleOwner = this@MainActivity
         }
 
         if (savedInstanceState == null) {
@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
     private fun initMainFragment() {
         supportFragmentManager.beginTransaction().add(
             R.id.main_activity_container,
-            MainFragment.newInstance(), null
+            MainFragment(), null
         ).commitNow()
     }
 }

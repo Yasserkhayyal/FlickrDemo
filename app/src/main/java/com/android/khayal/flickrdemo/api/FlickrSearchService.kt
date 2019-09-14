@@ -1,8 +1,8 @@
-package com.android.khayal.flickrdemo.network
+package com.android.khayal.flickrdemo.api
 
 import com.android.khayal.flickrdemo.BuildConfig
-import com.android.khayal.flickrdemo.models.SearchResponse
-import io.reactivex.Observable
+import com.android.khayal.flickrdemo.vo.SearchResponse
+import io.reactivex.Single
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -16,7 +16,7 @@ interface FlickrSearchService {
         @Query("api_key") apiKey: String = BuildConfig.apiKey,
         @Query("format") format: String = "json",
         @Query("nojsoncallback") noJsonCallback: Boolean = true
-    ): Observable<SearchResponse.Content>
+    ): Single<SearchResponse.Content>
 
     companion object {
 

@@ -1,36 +1,30 @@
-package com.android.khayal.flickrdemo.main
+package com.android.khayal.flickrdemo.ui.main
 
-import android.app.SearchManager
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
-import android.support.v7.widget.RecyclerView
-import android.view.*
-import android.view.inputmethod.InputMethodManager
-import android.widget.ImageView
-import android.widget.SearchView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import com.android.khayal.flickrdemo.R
-import com.android.khayal.flickrdemo.data.DataRepository
 import com.android.khayal.flickrdemo.databinding.MainFragmentBinding
-import com.android.khayal.flickrdemo.listeners.NewIntentListener
 import com.android.khayal.flickrdemo.listeners.RecyclerItemClickListener
+import com.android.khayal.flickrdemo.repository.DataRepository
 
 
 class MainFragment : Fragment(), RecyclerItemClickListener.OnRecyclerClickListener
     , SharedPreferences.OnSharedPreferenceChangeListener {
 
-    companion object {
-        fun newInstance() = MainFragment()
-    }
-
+    lateinit var databinding: MainFragmentBinding
     val viewModel by lazy {
-        ViewModelProviders.of(this, MainFragmentViewModelFactory(DataRepository()))
+        ViewModelProviders.of(
+            this,
+            MainFragmentViewModelFactory(DataRepository())
+        )
             .get(MainFragmentViewModel::class.java)
     }
 
@@ -39,21 +33,20 @@ class MainFragment : Fragment(), RecyclerItemClickListener.OnRecyclerClickListen
         savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
-        return DataBindingUtil.inflate<MainFragmentBinding>(
+        databinding = DataBindingUtil.inflate<MainFragmentBinding>(
             LayoutInflater.from(context),
             R.layout.main_fragment,
             container,
             false
         )
-            .apply {
-                viewModel = this@MainFragment.viewModel
-                mainFragment = this@MainFragment
-                setLifecycleOwner(this@MainFragment)
-            }.root
+        return databinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        databinding.viewModel = viewModel
+        databinding.mainFragment = this
+        databinding.lifecycleOwner = this
         val searchKey = PreferenceManager.getDefaultSharedPreferences(activity?.applicationContext).getString(
             getString(R.string.query_key), ""
         ) ?: ""
@@ -66,6 +59,12 @@ class MainFragment : Fragment(), RecyclerItemClickListener.OnRecyclerClickListen
         super.onStart()
         PreferenceManager.getDefaultSharedPreferences(activity?.applicationContext)
             .registerOnSharedPreferenceChangeListener(this)
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        PreferenceManager.getDefaultSharedPreferences(activity?.applicationContext)
+            .unregisterOnSharedPreferenceChangeListener(this)
     }
 
     override fun onDestroy() {

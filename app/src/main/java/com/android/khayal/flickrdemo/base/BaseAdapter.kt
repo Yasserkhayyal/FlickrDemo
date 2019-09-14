@@ -1,13 +1,13 @@
-package com.android.khayal.flickrdemo.adapters
+package com.android.khayal.flickrdemo.base
 
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.android.khayal.flickrdemo.models.CommonViewHolder
+import com.android.khayal.flickrdemo.vo.CommonViewHolder
 
-open class BaseAdapter<T>(open var items: Array<T?>? = null) : RecyclerView.Adapter<CommonViewHolder<T>>() {
+open class BaseAdapter<T>(var items: Array<T?>? = null) : RecyclerView.Adapter<CommonViewHolder<T>>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommonViewHolder<T> {
         val layoutInflater = LayoutInflater.from(parent.context)

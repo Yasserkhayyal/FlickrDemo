@@ -1,10 +1,10 @@
-package com.android.khayal.flickrdemo.searchable
+package com.android.khayal.flickrdemo.ui.searchable
 
 import android.app.SearchManager
 import android.content.Context
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.widget.SearchView
 import com.android.khayal.flickrdemo.R

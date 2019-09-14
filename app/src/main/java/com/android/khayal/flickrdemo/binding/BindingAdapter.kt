@@ -1,15 +1,14 @@
-package com.android.khayal.flickrdemo.adapters
+package com.android.khayal.flickrdemo.binding
 
-import android.arch.lifecycle.LiveData
 import android.databinding.BindingAdapter
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import com.android.khayal.flickrdemo.listeners.RecyclerItemClickListener
+import com.android.khayal.flickrdemo.ui.main.SearchResultsAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import io.reactivex.observers.TestObserver
 
 object BindingAdapter {
 
@@ -34,13 +33,12 @@ object BindingAdapter {
             }
         }
         recyclerView.setHasFixedSize(true)
-        var recyclerViewAdapter = recyclerView.adapter as? SearchResultsAdapter<T>
+        val recyclerViewAdapter = recyclerView.adapter as? SearchResultsAdapter<T>
         recyclerViewAdapter?.apply {
-            items = dataArray
-            recyclerViewAdapter?.notifyDataSetChanged()
+            myItems = dataArray
+            recyclerViewAdapter.notifyDataSetChanged()
         } ?: SearchResultsAdapter(dataArray).let {
-            recyclerViewAdapter = it
-            recyclerView.adapter = recyclerViewAdapter
+            recyclerView.adapter = it
         }
     }
 

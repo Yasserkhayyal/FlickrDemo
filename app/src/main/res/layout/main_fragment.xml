@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
     <data>
-        <variable name="mainFragment" type="com.android.khayal.flickrdemo.main.MainFragment"/>
-        <variable name="viewModel" type="com.android.khayal.flickrdemo.main.MainFragmentViewModel"/>
+        <import type="android.view.View"/>
+        <variable name="mainFragment" type="com.android.khayal.flickrdemo.ui.main.MainFragment"/>
+        <variable name="viewModel" type="com.android.khayal.flickrdemo.ui.main.MainFragmentViewModel"/>
     </data>
     <android.support.constraint.ConstraintLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -26,7 +27,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:setVisibility="@{viewModel.showLoading}"
+                android:visibility="@{viewModel.showLoading? View.VISIBLE:View.GONE}"
         />
     </android.support.constraint.ConstraintLayout>
 </layout>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
     <data>
-        <variable name="obj" type="com.android.khayal.flickrdemo.models.SearchResponse.Item"/>
+        <variable name="obj" type="com.android.khayal.flickrdemo.vo.SearchResponse.Item"/>
     </data>
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                                  xmlns:app="http://schemas.android.com/apk/res-auto"

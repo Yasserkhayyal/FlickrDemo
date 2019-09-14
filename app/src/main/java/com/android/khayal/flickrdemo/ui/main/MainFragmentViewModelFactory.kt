@@ -1,8 +1,8 @@
-package com.android.khayal.flickrdemo.main
+package com.android.khayal.flickrdemo.ui.main
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
-import com.android.khayal.flickrdemo.data.DataRepository
+import com.android.khayal.flickrdemo.repository.DataRepository
 
 class MainFragmentViewModelFactory(val repository: DataRepository): ViewModelProvider.Factory {
 
