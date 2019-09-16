@@ -1,15 +1,15 @@
 package com.android.khayal.flickrdemo.ui.main
 
-import android.arch.lifecycle.ViewModelProviders
 import android.content.SharedPreferences
-import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import com.android.khayal.flickrdemo.R
 import com.android.khayal.flickrdemo.databinding.MainFragmentBinding
 import com.android.khayal.flickrdemo.listeners.RecyclerItemClickListener

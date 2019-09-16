@@ -1,7 +1,7 @@
 package com.android.khayal.flickrdemo.ui.main
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.android.khayal.flickrdemo.repository.DataRepository
 import com.android.khayal.flickrdemo.vo.SearchResponse
 import io.reactivex.disposables.CompositeDisposable
@@ -34,7 +34,7 @@ class MainFragmentViewModel(
         feed.postValue(null)
     }
 
-    override public fun onCleared() {
+    public override fun onCleared() {
         disposables.dispose()
     }
 

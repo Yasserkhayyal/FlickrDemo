@@ -4,9 +4,9 @@ import android.app.SearchManager
 import android.content.Context
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.widget.SearchView
+import androidx.appcompat.app.AppCompatActivity
 import com.android.khayal.flickrdemo.R
 import kotlinx.android.synthetic.main.toolbar_layout.*
 

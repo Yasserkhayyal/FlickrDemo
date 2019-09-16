@@ -1,16 +1,15 @@
 package com.android.khayal.flickrdemo.listeners
 
 import android.content.Context
-import android.support.v4.view.GestureDetectorCompat
-import android.support.v7.widget.RecyclerView
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import androidx.core.view.GestureDetectorCompat
 
 class RecyclerItemClickListener(
-    context: Context, recyclerView: RecyclerView,
+    context: Context, recyclerView: androidx.recyclerview.widget.RecyclerView,
     listener: OnRecyclerClickListener
-) : RecyclerView.SimpleOnItemTouchListener() {
+) : androidx.recyclerview.widget.RecyclerView.SimpleOnItemTouchListener() {
 
     interface OnRecyclerClickListener {
         fun onItemClick(view: View, position: Int)
@@ -32,7 +31,7 @@ class RecyclerItemClickListener(
         }
     })
 
-    override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+    override fun onInterceptTouchEvent(rv: androidx.recyclerview.widget.RecyclerView, e: MotionEvent): Boolean {
         val result = gestureDetector.onTouchEvent(e)
         return result
     }

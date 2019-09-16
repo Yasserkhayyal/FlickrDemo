@@ -1,10 +1,9 @@
 package com.android.khayal.flickrdemo.main
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.android.khayal.flickrdemo.repository.DataRepository
-import com.android.khayal.flickrdemo.vo.SearchResponse
 import com.android.khayal.flickrdemo.ui.main.MainFragmentViewModel
-import io.reactivex.Observable
+import com.android.khayal.flickrdemo.vo.SearchResponse
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import org.junit.Assert.assertArrayEquals
@@ -12,7 +11,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito
 import org.mockito.Mockito.*
 import java.lang.Thread.sleep
 

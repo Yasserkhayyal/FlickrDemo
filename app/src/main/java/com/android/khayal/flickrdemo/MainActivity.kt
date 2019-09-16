@@ -1,11 +1,11 @@
 package com.android.khayal.flickrdemo
 
 import android.content.Intent
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import com.android.khayal.flickrdemo.databinding.ActivityMainBinding
 import com.android.khayal.flickrdemo.ui.main.MainFragment
 import com.android.khayal.flickrdemo.ui.searchable.SearchActivity

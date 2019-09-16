@@ -3,14 +3,14 @@
     <data>
         <variable name="obj" type="com.android.khayal.flickrdemo.vo.SearchResponse.Item"/>
     </data>
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                 xmlns:tools="http://schemas.android.com/tools"
-                                                 android:id="@+id/list_item"
-                                                 android:clickable="true"
-                                                 android:focusable="true"
-                                                 android:layout_width="match_parent"
-                                                 android:layout_height="wrap_content">
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                       xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                       xmlns:tools="http://schemas.android.com/tools"
+                                                       android:id="@+id/list_item"
+                                                       android:clickable="true"
+                                                       android:focusable="true"
+                                                       android:layout_width="match_parent"
+                                                       android:layout_height="wrap_content">
 
         <ImageView
                 android:layout_width="150dp"
@@ -25,7 +25,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"/>
+                android:layout_marginEnd="16dp"/>
         <TextView
                 tools:text="title"
                 android:layout_width="0dp"
@@ -66,5 +66,5 @@
                 android:layout_marginTop="8dp"
         />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

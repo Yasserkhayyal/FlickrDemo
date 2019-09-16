@@ -3,11 +3,13 @@ package com.android.khayal.flickrdemo.api
 import com.android.khayal.flickrdemo.BuildConfig
 import com.android.khayal.flickrdemo.vo.SearchResponse
 import io.reactivex.Single
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface FlickrSearchService {
     @GET("https://api.flickr.com/services/feeds/photos_public.gne/")
@@ -22,6 +24,8 @@ interface FlickrSearchService {
 
         fun create(): FlickrSearchService {
 
+            val okHttpClient = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
+
             val retrofit = Retrofit.Builder()
                 .addCallAdapterFactory(
                     RxJava2CallAdapterFactory.create()
@@ -29,6 +33,7 @@ interface FlickrSearchService {
                 .addConverterFactory(
                     GsonConverterFactory.create()
                 )
+                .client(okHttpClient)
                 .baseUrl("https://api.flickr.com/services/feeds/photos_public.gne/")
                 .build()
 
