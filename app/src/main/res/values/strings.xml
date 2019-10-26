@@ -4,4 +4,5 @@
     <string name="search_hint">Enter tags here</string>
     <string name="start_search">start search</string>
     <string name="query_key">query key</string>
+    <string name="error_search_result">Invalid response %s</string>
 </resources>

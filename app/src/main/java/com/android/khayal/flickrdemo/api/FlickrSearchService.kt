@@ -1,15 +1,14 @@
 package com.android.khayal.flickrdemo.api
 
+import androidx.lifecycle.LiveData
 import com.android.khayal.flickrdemo.BuildConfig
+import com.android.khayal.flickrdemo.utils.LiveDataCallAdapterFactory
 import com.android.khayal.flickrdemo.vo.SearchResponse
-import io.reactivex.Single
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
-import retrofit2.http.Url
 
 interface FlickrSearchService {
     @GET("https://api.flickr.com/services/feeds/photos_public.gne/")
@@ -18,7 +17,7 @@ interface FlickrSearchService {
         @Query("api_key") apiKey: String = BuildConfig.apiKey,
         @Query("format") format: String = "json",
         @Query("nojsoncallback") noJsonCallback: Boolean = true
-    ): Single<SearchResponse.Content>
+    ): LiveData<ApiResponse<SearchResponse.Content>>
 
     companion object {
 
@@ -27,9 +26,7 @@ interface FlickrSearchService {
             val okHttpClient = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
 
             val retrofit = Retrofit.Builder()
-                .addCallAdapterFactory(
-                    RxJava2CallAdapterFactory.create()
-                )
+                .addCallAdapterFactory(LiveDataCallAdapterFactory())
                 .addConverterFactory(
                     GsonConverterFactory.create()
                 )

@@ -9,31 +9,30 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import com.android.khayal.flickrdemo.AppExecutors
 import com.android.khayal.flickrdemo.R
+import com.android.khayal.flickrdemo.api.FlickrSearchService
 import com.android.khayal.flickrdemo.databinding.MainFragmentBinding
+import com.android.khayal.flickrdemo.db.FlickrDemoDataBase
 import com.android.khayal.flickrdemo.listeners.RecyclerItemClickListener
 import com.android.khayal.flickrdemo.repository.DataRepository
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.main_fragment.*
 
 
 class MainFragment : Fragment(), RecyclerItemClickListener.OnRecyclerClickListener
     , SharedPreferences.OnSharedPreferenceChangeListener {
 
     lateinit var databinding: MainFragmentBinding
-    val viewModel by lazy {
-        ViewModelProviders.of(
-            this,
-            MainFragmentViewModelFactory(DataRepository())
-        )
-            .get(MainFragmentViewModel::class.java)
-    }
+    lateinit var viewModel: MainFragmentViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
-        databinding = DataBindingUtil.inflate<MainFragmentBinding>(
+        databinding = DataBindingUtil.inflate(
             LayoutInflater.from(context),
             R.layout.main_fragment,
             container,
@@ -44,12 +43,34 @@ class MainFragment : Fragment(), RecyclerItemClickListener.OnRecyclerClickListen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val appExecutors = AppExecutors()
+        val flickRoomDb = FlickrDemoDataBase.getDataBase(activity?.application ?: context!!)
+        val searchItemDao = flickRoomDb.searchItemDao()
+        val flickrSearchService = FlickrSearchService.create()
+        val dataRepository = DataRepository( // will be modified when Dagger is integrated
+            appExecutors = appExecutors,
+            db = flickRoomDb,
+            searchItemDao = searchItemDao,
+            flickrSearchService = flickrSearchService
+        )
+        viewModel =
+            MainFragmentViewModelFactory(dataRepository).create(MainFragmentViewModel::class.java)
         databinding.viewModel = viewModel
         databinding.mainFragment = this
         databinding.lifecycleOwner = this
-        val searchKey = PreferenceManager.getDefaultSharedPreferences(activity?.applicationContext).getString(
-            getString(R.string.query_key), ""
-        ) ?: ""
+        viewModel.error.observe(this, Observer {
+            if (!it.isNullOrEmpty()) {
+                Snackbar.make(
+                    snackbar_layout,
+                    String.format(getString(R.string.error_search_result), it),
+                    Snackbar.LENGTH_INDEFINITE
+                ).show()
+            }
+        })
+        val searchKey =
+            PreferenceManager.getDefaultSharedPreferences(activity?.applicationContext).getString(
+                getString(R.string.query_key), ""
+            ) ?: ""
         if (searchKey.isNotEmpty()) {//to execute search at least once
             viewModel.getSearchData(tags = searchKey, tagMode = "Any")
         }

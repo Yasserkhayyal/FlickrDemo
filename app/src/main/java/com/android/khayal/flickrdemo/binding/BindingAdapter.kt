@@ -55,10 +55,13 @@ object BindingAdapter {
             .into(view as ImageView)
     }
 
-    @BindingAdapter("setVisibility")
+    @BindingAdapter("snackbarVisibility")
     @JvmStatic
-    fun showProgressBar(view: View, show: Boolean) {
-        view.visibility = if (show) View.VISIBLE else View.GONE
+    fun setSnackBarVisibility(view: View, error: String?) {
+        view.visibility = if (error.isNullOrEmpty()) {
+            View.GONE
+        } else {
+            View.VISIBLE
+        }
     }
-
 }

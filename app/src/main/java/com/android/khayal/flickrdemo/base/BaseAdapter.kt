@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import com.android.khayal.flickrdemo.vo.CommonViewHolder
+import com.android.khayal.flickrdemo.ui.CommonViewHolder
 
 open class BaseAdapter<T>(var items: Array<T?>? = null) :
     androidx.recyclerview.widget.RecyclerView.Adapter<CommonViewHolder<T>>() {

@@ -1,4 +1,4 @@
-package com.android.khayal.flickrdemo.vo
+package com.android.khayal.flickrdemo.ui
 
 import androidx.databinding.ViewDataBinding
 import com.android.khayal.flickrdemo.BR

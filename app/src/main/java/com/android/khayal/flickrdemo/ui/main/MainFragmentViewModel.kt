@@ -1,41 +1,47 @@
 package com.android.khayal.flickrdemo.ui.main
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.android.khayal.flickrdemo.repository.DataRepository
+import com.android.khayal.flickrdemo.vo.Resource
 import com.android.khayal.flickrdemo.vo.SearchResponse
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import com.android.khayal.flickrdemo.vo.Status
 
-class MainFragmentViewModel(
-    private val repository: DataRepository = DataRepository(),
-    private val disposables: CompositeDisposable = CompositeDisposable()
-) : ViewModel() {
+class MainFragmentViewModel(val repository: DataRepository) : ViewModel(),
+    Observer<Resource<Array<SearchResponse.Item>>> {
 
-    val feed: MutableLiveData<Array<SearchResponse.Item>> = MutableLiveData()
+    val feed = MutableLiveData<Array<SearchResponse.Item>>()
+    val error = MutableLiveData<String?>()
     val showLoading: MutableLiveData<Boolean> = MutableLiveData()
 
     fun getSearchData(tags: String, tagMode: String) {
-        val d = repository.fetchData(tags, tagMode)
-            .subscribeOn(Schedulers.io())
-            .doOnSubscribe { showLoading.postValue(true) }
-            .doOnSuccess { showLoading.postValue(false) }
-            .doOnError { showLoading.postValue(false) }
-            .doOnDispose { showLoading.postValue(false) }
-            .subscribe(::onResponseSuccess, ::onResponseFail)
-        disposables.add(d)
+        repository.fetchData(keys = tags, tagMode = tagMode).observeForever(this)
     }
 
-    fun onResponseSuccess(response: SearchResponse.Content) {
-        feed.postValue(response.items)
+    override fun onCleared() {
+        repository.removeObserver(this)
     }
 
-    fun onResponseFail(error: Throwable) {
-        feed.postValue(null)
+    override fun onChanged(resultType: Resource<Array<SearchResponse.Item>>) {
+        when (resultType.status) {
+            Status.LOADING -> {
+                showLoading.value = true
+                feed.value = resultType.data
+                error.value = resultType.message
+            }
+            Status.SUCCESS -> {
+                showLoading.value = false
+                feed.value = resultType.data
+                error.value = resultType.message
+                repository.removeObserver(this)
+            }
+            Status.ERROR -> {
+                showLoading.value = false
+                feed.value = resultType.data
+                error.value = resultType.message
+                repository.removeObserver(this)
+            }
+        }
     }
-
-    public override fun onCleared() {
-        disposables.dispose()
-    }
-
 }
