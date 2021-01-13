@@ -12,6 +12,7 @@ android {
         applicationId "com.android.khayal.flickrdemo"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
+        multiDexEnabled true
         buildConfigField("String", "apiKey", rootProject.ext.FlickrApiKey)
         versionCode 1
         versionName "1.0"
@@ -79,5 +80,7 @@ dependencies {
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutines"
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha05'
 
+
+    implementation "androidx.multidex:multidex:$androidx_multidex"
 
 }

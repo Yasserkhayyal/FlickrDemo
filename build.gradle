@@ -26,6 +26,9 @@ buildscript {
         roomVersion = '2.1.0'
         coroutines = '1.2.0'
         FlickrApiKey = "\"f12dd4225d4739ce439a527fb5c54b68\""
+
+        androidx_multidex = '2.0.1'
+
     }
     repositories {
         google()
