@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.android.khayal.flickrdemo.AppExecutors
@@ -18,13 +17,16 @@ import com.android.khayal.flickrdemo.db.FlickrDemoDataBase
 import com.android.khayal.flickrdemo.listeners.RecyclerItemClickListener
 import com.android.khayal.flickrdemo.repository.DataRepository
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.main_fragment.*
 
 
 class MainFragment : Fragment(), RecyclerItemClickListener.OnRecyclerClickListener
     , SharedPreferences.OnSharedPreferenceChangeListener {
 
-    lateinit var databinding: MainFragmentBinding
+
+    private var mainFragmentBinding: MainFragmentBinding? = null
+    //valid to use only between the onCreateView() and onDestroyView()
+    private val _mainFragmentBinding: MainFragmentBinding
+        get() = mainFragmentBinding!!
     lateinit var viewModel: MainFragmentViewModel
 
     override fun onCreateView(
@@ -32,13 +34,8 @@ class MainFragment : Fragment(), RecyclerItemClickListener.OnRecyclerClickListen
         savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
-        databinding = DataBindingUtil.inflate(
-            LayoutInflater.from(context),
-            R.layout.main_fragment,
-            container,
-            false
-        )
-        return databinding.root
+        mainFragmentBinding = MainFragmentBinding.inflate(layoutInflater)
+        return _mainFragmentBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -55,13 +52,13 @@ class MainFragment : Fragment(), RecyclerItemClickListener.OnRecyclerClickListen
         )
         viewModel =
             MainFragmentViewModelFactory(dataRepository).create(MainFragmentViewModel::class.java)
-        databinding.viewModel = viewModel
-        databinding.mainFragment = this
-        databinding.lifecycleOwner = this
-        viewModel.error.observe(this, Observer {
+        _mainFragmentBinding.viewModel = viewModel
+        _mainFragmentBinding.mainFragment = this
+        _mainFragmentBinding.lifecycleOwner = this
+        viewModel.error.observe(viewLifecycleOwner, Observer {
             if (!it.isNullOrEmpty()) {
                 Snackbar.make(
-                    snackbar_layout,
+                    _mainFragmentBinding.snackbarLayout,
                     String.format(getString(R.string.error_search_result), it),
                     Snackbar.LENGTH_INDEFINITE
                 ).show()
@@ -112,5 +109,10 @@ class MainFragment : Fragment(), RecyclerItemClickListener.OnRecyclerClickListen
                 viewModel.getSearchData(tags = searchKey, tagMode = "Any")
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mainFragmentBinding = null
     }
 }

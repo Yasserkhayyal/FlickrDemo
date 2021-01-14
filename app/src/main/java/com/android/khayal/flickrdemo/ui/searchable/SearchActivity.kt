@@ -8,14 +8,17 @@ import android.view.Menu
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import com.android.khayal.flickrdemo.R
-import kotlinx.android.synthetic.main.toolbar_layout.*
+import com.android.khayal.flickrdemo.databinding.ActivitySearchBinding
 
 class SearchActivity : AppCompatActivity() {
 
+    private lateinit var activitySearchBinding: ActivitySearchBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
-        setSupportActionBar(toolbar)
+        activitySearchBinding = ActivitySearchBinding.inflate(layoutInflater)
+        setContentView(activitySearchBinding.root)
+        setSupportActionBar(activitySearchBinding.toolbarLayout.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
@@ -27,11 +30,12 @@ class SearchActivity : AppCompatActivity() {
         val searchableInfo = searchManager.getSearchableInfo(componentName)
         searchView.setSearchableInfo(searchableInfo)
         searchView.isSubmitButtonEnabled = true
-        searchView.setIconifiedByDefault(true)
+        searchView.isIconifiedByDefault = true
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+                val sharedPreferences =
+                    PreferenceManager.getDefaultSharedPreferences(applicationContext)
                 sharedPreferences.edit().putString(getString(R.string.query_key), query).apply()
                 searchView.clearFocus()
                 finish()

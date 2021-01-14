@@ -5,23 +5,19 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import com.android.khayal.flickrdemo.databinding.ActivityMainBinding
 import com.android.khayal.flickrdemo.ui.main.MainFragment
 import com.android.khayal.flickrdemo.ui.searchable.SearchActivity
-import kotlinx.android.synthetic.main.toolbar_layout.*
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var mainActivityBinding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main).apply {
-            setSupportActionBar(toolbar)
-            supportActionBar?.setDisplayHomeAsUpEnabled(false)
-            lifecycleOwner = this@MainActivity
-        }
-
+        mainActivityBinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(mainActivityBinding.root)
+        setSupportActionBar(mainActivityBinding.toolbarLayout.toolbar)
         if (savedInstanceState == null) {
             initMainFragment()
         }
