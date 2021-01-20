@@ -2,8 +2,9 @@ package com.android.khayal.flickrdemo.api
 
 import okhttp3.Interceptor
 import okhttp3.Response
+import javax.inject.Inject
 
-class LoggingInterceptor() : Interceptor {
+class LoggingInterceptor @Inject constructor() : Interceptor {
     lateinit var requestUrl: String
 
     override fun intercept(chain: Interceptor.Chain): Response {

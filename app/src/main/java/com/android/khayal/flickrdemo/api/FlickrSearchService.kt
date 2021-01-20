@@ -18,23 +18,4 @@ interface FlickrSearchService {
         @Query("format") format: String = "json",
         @Query("nojsoncallback") noJsonCallback: Boolean = true
     ): LiveData<ApiResponse<SearchResponse.Content>>
-
-    companion object {
-
-        fun create(): FlickrSearchService {
-
-            val okHttpClient = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
-
-            val retrofit = Retrofit.Builder()
-                .addCallAdapterFactory(LiveDataCallAdapterFactory())
-                .addConverterFactory(
-                    GsonConverterFactory.create()
-                )
-                .client(okHttpClient)
-                .baseUrl("https://api.flickr.com/services/feeds/photos_public.gne/")
-                .build()
-
-            return retrofit.create(FlickrSearchService::class.java)
-        }
-    }
 }

@@ -7,8 +7,9 @@ import retrofit2.CallAdapter.Factory
 import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
+import javax.inject.Inject
 
-class LiveDataCallAdapterFactory : Factory() {
+class LiveDataCallAdapterFactory @Inject constructor(): Factory() {
     override fun get(
         returnType: Type,
         annotations: Array<Annotation>,

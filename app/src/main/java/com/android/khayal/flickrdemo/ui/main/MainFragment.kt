@@ -2,32 +2,39 @@ package com.android.khayal.flickrdemo.ui.main
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.android.khayal.flickrdemo.AppExecutors
 import com.android.khayal.flickrdemo.R
-import com.android.khayal.flickrdemo.api.FlickrSearchService
+import com.android.khayal.flickrdemo.core.DFMSavedStateViewModelFactory
 import com.android.khayal.flickrdemo.databinding.MainFragmentBinding
-import com.android.khayal.flickrdemo.db.FlickrDemoDataBase
+import com.android.khayal.flickrdemo.di.SavedStateFragmentViewModelFactory
 import com.android.khayal.flickrdemo.listeners.RecyclerItemClickListener
-import com.android.khayal.flickrdemo.repository.DataRepository
+import com.android.khayal.flickrdemo.vo.Status
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
-class MainFragment : Fragment(), RecyclerItemClickListener.OnRecyclerClickListener
+@AndroidEntryPoint
+class MainFragment : Fragment(),
+    RecyclerItemClickListener.OnRecyclerClickListener
     , SharedPreferences.OnSharedPreferenceChangeListener {
 
-
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
     private var mainFragmentBinding: MainFragmentBinding? = null
+
     //valid to use only between the onCreateView() and onDestroyView()
     private val _mainFragmentBinding: MainFragmentBinding
         get() = mainFragmentBinding!!
-    lateinit var viewModel: MainFragmentViewModel
+
+    @SavedStateFragmentViewModelFactory
+    @Inject lateinit var savedStateViewModelFactory: DFMSavedStateViewModelFactory
+    private val viewModel by viewModels<MainFragmentViewModel>{savedStateViewModelFactory}
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,18 +47,6 @@ class MainFragment : Fragment(), RecyclerItemClickListener.OnRecyclerClickListen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val appExecutors = AppExecutors()
-        val flickRoomDb = FlickrDemoDataBase.getDataBase(activity?.application ?: context!!)
-        val searchItemDao = flickRoomDb.searchItemDao()
-        val flickrSearchService = FlickrSearchService.create()
-        val dataRepository = DataRepository( // will be modified when Dagger is integrated
-            appExecutors = appExecutors,
-            db = flickRoomDb,
-            searchItemDao = searchItemDao,
-            flickrSearchService = flickrSearchService
-        )
-        viewModel =
-            MainFragmentViewModelFactory(dataRepository).create(MainFragmentViewModel::class.java)
         _mainFragmentBinding.viewModel = viewModel
         _mainFragmentBinding.mainFragment = this
         _mainFragmentBinding.lifecycleOwner = this
@@ -65,32 +60,48 @@ class MainFragment : Fragment(), RecyclerItemClickListener.OnRecyclerClickListen
             }
         })
         val searchKey =
-            PreferenceManager.getDefaultSharedPreferences(activity?.applicationContext).getString(
+            sharedPreferences.getString(
                 getString(R.string.query_key), ""
             ) ?: ""
         if (searchKey.isNotEmpty()) {//to execute search at least once
-            viewModel.getSearchData(tags = searchKey, tagMode = "Any")
+            viewModel.getSearchData(tags = searchKey, tagMode = "Any").observe(viewLifecycleOwner,
+                Observer { resultType ->
+                    when (resultType.status) {
+                        Status.LOADING -> {
+                            viewModel.showLoading.value = true
+                            viewModel.feed.value = resultType.data
+                            viewModel.error.value = resultType.message
+                        }
+                        Status.SUCCESS -> {
+                            viewModel.showLoading.value = false
+                            viewModel.feed.value = resultType.data
+                            viewModel.error.value = resultType.message
+                        }
+                        Status.ERROR -> {
+                            viewModel.showLoading.value = false
+                            viewModel.feed.value = resultType.data
+                            viewModel.error.value = resultType.message
+                        }
+                    }
+                })
         }
     }
 
     override fun onStart() {
         super.onStart()
-        PreferenceManager.getDefaultSharedPreferences(activity?.applicationContext)
-            .registerOnSharedPreferenceChangeListener(this)
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        PreferenceManager.getDefaultSharedPreferences(activity?.applicationContext)
-            .unregisterOnSharedPreferenceChangeListener(this)
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         //unregister OnSharedPreferenceChangeListener here in order to detect
         //the changes in the SearchActivity
-        PreferenceManager.getDefaultSharedPreferences(activity?.applicationContext)
-            .unregisterOnSharedPreferenceChangeListener(this)
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
     }
 
 

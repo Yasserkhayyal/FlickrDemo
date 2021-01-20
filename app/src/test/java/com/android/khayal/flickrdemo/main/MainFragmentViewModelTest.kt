@@ -2,7 +2,7 @@ package com.android.khayal.flickrdemo.main
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import com.android.khayal.flickrdemo.repository.DataRepository
+import com.android.khayal.flickrdemo.repository.DataRepositoryImp
 import com.android.khayal.flickrdemo.ui.main.MainFragmentViewModel
 import com.android.khayal.flickrdemo.vo.Resource
 import com.android.khayal.flickrdemo.vo.SearchResponse
@@ -22,7 +22,7 @@ class MainFragmentViewModelTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
     @Mock
-    lateinit var repo: DataRepository
+    lateinit var repo: DataRepositoryImp
     lateinit var viewModel: MainFragmentViewModel
 
     @Before

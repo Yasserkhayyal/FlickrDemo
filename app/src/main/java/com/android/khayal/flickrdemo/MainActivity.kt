@@ -8,7 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.android.khayal.flickrdemo.databinding.ActivityMainBinding
 import com.android.khayal.flickrdemo.ui.main.MainFragment
 import com.android.khayal.flickrdemo.ui.searchable.SearchActivity
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mainActivityBinding: ActivityMainBinding
